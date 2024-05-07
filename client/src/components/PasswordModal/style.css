@@ -1,6 +1,6 @@
 .square-div{
     background: #efecec;
-    width: 230px;
+    width: 180px;
     height: 140px;
     position: absolute;
     top: 30px;
@@ -22,4 +22,9 @@
     border-top: 20px solid transparent;
     border-bottom: 20px solid transparent;
     border-right: 28px solid #efecec;
+}
+.inner-content-div {
+    padding: 6px 0px 0px 17px;
+    font-size: 17px;
+    color: gray;
 }
