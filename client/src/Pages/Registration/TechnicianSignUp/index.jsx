@@ -6,6 +6,7 @@ import "react-phone-input-2/lib/style.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Regx } from "../../../constants";
 import PasswordValidation from "../../../components/PasswordValidation/PasswordValidation";
+import PasswordModal from '../../../components/PasswordModal/PasswordModal'
 import {
   Form,
   Container,
@@ -22,7 +23,6 @@ import { eye } from "react-icons-kit/feather/eye";
 const TechnicianSignUp = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [validationModal, setValidationModal] = useState(false);
   const [userDetails, setUserDetails] = useState({
     fName: "",
     lName: "",
@@ -40,7 +40,7 @@ const TechnicianSignUp = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
+const [showPasswordModal,setShowPasswordModal] = useState(false)
 
   const registerBtn = () => {
     if (userDetails.fName === "" && userDetails.lName === "" && userDetails.password === "" && userDetails.email === "" && userDetails.phoneNo < 10 && userDetails.gender === "") {
@@ -98,7 +98,6 @@ const TechnicianSignUp = () => {
     }
     else if(name === "password"){
       console.log(value)
-      setValidationModal(true)
     }
   }
 
@@ -194,8 +193,9 @@ const TechnicianSignUp = () => {
                           value={userDetails.password}
                           name="password"
                           autoComplete="new-password"
-                          
                           onChange={(e) => handleChange(e)}
+                          onBlur={()=>setShowPasswordModal(false)}
+                          onFocus={()=>setShowPasswordModal(true)}
                           style={{
                             border: "1px solid rgb(220, 230, 237)",
                             lineHeight: "3.5",
@@ -213,7 +213,9 @@ const TechnicianSignUp = () => {
                         </InputGroup.Text>
                       </InputGroup>
                       <label className="err-message">{userDetails.passwordErrMess}</label>
-                    <PasswordValidation value={userDetails.password} passwordErrMess={userDetails.passwordErrMess} setUserDetails={setUserDetails} validationModal={validationModal} setValidationModal={setValidationModal} />
+                      <PasswordModal visible={showPasswordModal}>
+                        <PasswordValidation value={userDetails.password}/>
+                      </PasswordModal>
                     </Form.Group>
                   </Row>
                   <Row>

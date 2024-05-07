@@ -29,7 +29,7 @@ header.heading-h1{
 .terms-policy{
     color:rgb(1, 212, 213);
 }
-/* .password-div{
-    position: absolute;
-} */
+.password-div{
+    position: relative;
+}
 

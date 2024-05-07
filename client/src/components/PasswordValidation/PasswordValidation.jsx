@@ -2,23 +2,14 @@ import React, { useState, useEffect } from "react";
 import './PasswordValidation.css'
 
 
-const PasswordValidation = ({ validationModal, setValidationModal, value, passwordErrMess, setUserDetails }) => {
+const PasswordValidation = ({ value }) => {
     useEffect(() => {
-        console.log("value", validationModal)
-    }, [validationModal])
+        console.log("value>>>>>>>>>>>>", value)
+    }, [value])
     return (
-        <>
-            {true ?
-                <div className="modal-container">
-                    <div className="square-div">
-                        <p>
-                            message
-                        </p>
-                    </div>
-                    <div className="triangle-div"></div>
-                </div>
-                : <></>}
-        </>
+        <div>
+            <p>Content</p>
+        </div>
     )
 }
 export default PasswordValidation;
