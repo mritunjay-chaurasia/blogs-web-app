@@ -1,0 +1,35 @@
+.body-container{
+    box-shadow: 2px 2px 10px 2px #ccc;
+    padding: 0 40px;
+}
+
+header.heading-h1{
+    font-size: 30px;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+.sub-heading{
+    color: #708390;
+    text-align: justify;
+}
+.form-field-div{
+    width: 75% !important;
+    margin: 0 auto;
+}
+
+.react-tel-input .form-control{
+    width: 100% !important;
+    height: 65px !important;
+    border: 1px solid rgb(220, 230, 237) !important;
+    box-shadow: rgb(238, 245, 250) 0px 6px 8px inset !important;
+}
+.terms-condition{
+    color: gray;
+}
+.terms-policy{
+    color:rgb(1, 212, 213);
+}
+/* .password-div{
+    position: absolute;
+} */
+

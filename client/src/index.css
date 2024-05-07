@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.input-no-outline:focus {
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #d0d0d0;
+}
+
+.input-no-outline{
+  background: #edf4fa;
+  border: none;
+  padding: 12px 0 12px 10px;
+  border-bottom: 2px solid #d0d0d0;
+  cursor: pointer;
+}
+.input-no-input-field{
+  padding: 12px;
+}
+
+.err-message{
+  color: red;
+  display: flex;
+}
+
+.login-form{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.password-section{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.login-div-form{
+  width: 40%;
+  height: 100%;
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+}
+
