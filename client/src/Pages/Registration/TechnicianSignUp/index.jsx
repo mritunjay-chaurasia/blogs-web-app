@@ -40,8 +40,8 @@ const TechnicianSignUp = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-const [showPasswordModal,setShowPasswordModal] = useState(false)
-
+const [showPasswordModal,setShowPasswordModal] = useState(false);
+const [isPasswordValid,setIsPasswordValid] = useState(false);
   const registerBtn = () => {
     if (userDetails.fName === "" && userDetails.lName === "" && userDetails.password === "" && userDetails.email === "" && userDetails.phoneNo < 10 && userDetails.gender === "") {
       setUserDetails({ ...userDetails, fNameErrMess: "First name is mandatory.", lNameErrMess: "Last name is mandatory.", emailErrMess: "Email is mandatory.", passwordErrMess: "Password is mandatory.", phoneNoErrMess: "Phone is mandatory.", genderErrMess: "Gender is mandatory." })
@@ -67,7 +67,7 @@ const [showPasswordModal,setShowPasswordModal] = useState(false)
       setUserDetails({ ...userDetails, genderErrMess: "Gender is mandatory." })
       return
     } else {
-      setUserDetails({ ...userDetails, fNameErrMess: true, lNameErrMess: true, emailErrMess: true, phoneNoErrMess: true, genderErrMess: true })
+      setUserDetails({ ...userDetails, fNameErrMess: true, lNameErrMess: true, emailErrMess: true,passwordErrMess:isPasswordValid,phoneNoErrMess: true, genderErrMess: true })
     }
   }
   const validateEmail = (email) => {
@@ -97,7 +97,12 @@ const [showPasswordModal,setShowPasswordModal] = useState(false)
       }
     }
     else if(name === "password"){
-      console.log(value)
+      console.log("sssssssssssssss",isPasswordValid)
+      // if (isPasswordValid) {
+      //   setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: true })
+      // } else {
+      //   setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: "Enter valid Password" })
+      // }
     }
   }
 
@@ -213,7 +218,7 @@ const [showPasswordModal,setShowPasswordModal] = useState(false)
                         </InputGroup.Text>
                       </InputGroup>
                       <label className="err-message">{userDetails.passwordErrMess}</label>
-                      <PasswordModal visible={showPasswordModal}>
+                      <PasswordModal visible={showPasswordModal} setIsPasswordValid={setIsPasswordValid} >
                         <PasswordValidation value={userDetails.password}/>
                       </PasswordModal>
                     </Form.Group>
