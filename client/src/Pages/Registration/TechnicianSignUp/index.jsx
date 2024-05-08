@@ -40,8 +40,8 @@ const TechnicianSignUp = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-const [showPasswordModal,setShowPasswordModal] = useState(false);
-const [isPasswordValid,setIsPasswordValid] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
   const registerBtn = () => {
     if (userDetails.fName === "" && userDetails.lName === "" && userDetails.password === "" && userDetails.email === "" && userDetails.phoneNo < 10 && userDetails.gender === "") {
       setUserDetails({ ...userDetails, fNameErrMess: "First name is mandatory.", lNameErrMess: "Last name is mandatory.", emailErrMess: "Email is mandatory.", passwordErrMess: "Password is mandatory.", phoneNoErrMess: "Phone is mandatory.", genderErrMess: "Gender is mandatory." })
@@ -67,8 +67,10 @@ const [isPasswordValid,setIsPasswordValid] = useState(false);
       setUserDetails({ ...userDetails, genderErrMess: "Gender is mandatory." })
       return
     } else {
-      setUserDetails({ ...userDetails, fNameErrMess: true, lNameErrMess: true, emailErrMess: true,passwordErrMess:isPasswordValid,phoneNoErrMess: true, genderErrMess: true })
+      setUserDetails({ ...userDetails, fNameErrMess: true, lNameErrMess: true, emailErrMess: true, phoneNoErrMess: true, genderErrMess: true })
     }
+    console.log("post>>>>>>>>>>>>>>>>>>", userDetails)
+    // here u can call api
   }
   const validateEmail = (email) => {
     return String(email)
@@ -77,6 +79,8 @@ const [isPasswordValid,setIsPasswordValid] = useState(false);
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       );
   };
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const regex = /^[a-zA-Z]+$/
@@ -96,15 +100,26 @@ const [isPasswordValid,setIsPasswordValid] = useState(false);
         setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: "Enter valid email" })
       }
     }
-    else if(name === "password"){
-      console.log("sssssssssssssss",isPasswordValid)
-      // if (isPasswordValid) {
-      //   setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: true })
-      // } else {
-      //   setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: "Enter valid Password" })
-      // }
+    else if (name === "password") {
+      const password = value;
+      const validations = {
+        isSixCharacters: password.length >= 6,
+        hasSmallLetter: /[a-z]/.test(password),
+        hasCapitalLetter: /[A-Z]/.test(password),
+        hasSpecialCharacter: /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/g.test(password),
+        hasNumber: /[0-9]/.test(password),
+      };
+
+      const { isSixCharacters, hasSmallLetter, hasCapitalLetter, hasSpecialCharacter, hasNumber } = validations;
+
+      if (isSixCharacters && hasSmallLetter && hasCapitalLetter && hasSpecialCharacter && hasNumber) {
+        setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: true })
+      } else {
+        setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: "Enter valid Password" })
+      }
     }
   }
+
 
   return (
     <Container>
@@ -199,8 +214,8 @@ const [isPasswordValid,setIsPasswordValid] = useState(false);
                           name="password"
                           autoComplete="new-password"
                           onChange={(e) => handleChange(e)}
-                          onBlur={()=>setShowPasswordModal(false)}
-                          onFocus={()=>setShowPasswordModal(true)}
+                          onBlur={() => setShowPasswordModal(false)}
+                          onFocus={() => setShowPasswordModal(true)}
                           style={{
                             border: "1px solid rgb(220, 230, 237)",
                             lineHeight: "3.5",
@@ -218,8 +233,8 @@ const [isPasswordValid,setIsPasswordValid] = useState(false);
                         </InputGroup.Text>
                       </InputGroup>
                       <label className="err-message">{userDetails.passwordErrMess}</label>
-                      <PasswordModal visible={showPasswordModal} setIsPasswordValid={setIsPasswordValid} >
-                        <PasswordValidation value={userDetails.password}/>
+                      <PasswordModal visible={showPasswordModal} >
+                        <PasswordValidation value={userDetails.password} />
                       </PasswordModal>
                     </Form.Group>
                   </Row>

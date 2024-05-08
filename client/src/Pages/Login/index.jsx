@@ -32,14 +32,15 @@ const LoginPage = () => {
       setUserDetails({ ...userDetails, passwordErrMess: "Please input your Password!" });
       return
     } else {
-      console.log("submit data>>>>>>>>>>>>", userDetails)
       setUserDetails({ ...userDetails, emailErrMess: true, passwordErrMess: true });
     }
+    console.log("submit data>>>>>>>>>>>>", userDetails)
+    // you can call here api
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserDetails({...userDetails,[name]:value,[`${name}ErrMess`]:true})
+    setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: true })
   }
 
   const register = () => {
