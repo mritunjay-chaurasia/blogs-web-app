@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
+import  * as AuthApi  from '../../api/auth.api';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const LoginPage = () => {
     passwordErrMess: "",
   });
 
-  const handleLogin = () => {
+  const handleLogin = async() => {
     if (userDetails.email === "" && userDetails.password === "") {
       setUserDetails({ ...userDetails, emailErrMess: "Please input your E-mail.", passwordErrMess: "Please input your Password!" });
       return
@@ -35,6 +36,7 @@ const LoginPage = () => {
       setUserDetails({ ...userDetails, emailErrMess: true, passwordErrMess: true });
     }
     console.log("submit data>>>>>>>>>>>>", userDetails)
+    const respose = await AuthApi.login(userDetails)
     // you can call here api
   };
 
