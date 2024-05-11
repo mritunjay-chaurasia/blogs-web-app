@@ -36,7 +36,11 @@ const LoginPage = () => {
       setUserDetails({ ...userDetails, emailErrMess: true, passwordErrMess: true });
     }
     console.log("submit data>>>>>>>>>>>>", userDetails)
-    const respose = await AuthApi.login(userDetails)
+    const data = {
+      email:userDetails.email,
+      password:userDetails.password
+    }
+    const respose = await AuthApi.login(data)
     // you can call here api
   };
 
