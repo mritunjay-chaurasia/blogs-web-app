@@ -1,18 +1,33 @@
-import logo from "./logo.svg";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import LoginPage from "./Pages/Login";
 import Registration from "./Pages/Registration";
-// import CustomizedMenus from './components/Test'
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<LoginPage />}  />
-        <Route exact path="/register" element={<Registration />}  />
-      </Routes>
-      
-    </Router>
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/login" element={
+        <PublicRoute>
+          <LoginPage />
+        </PublicRoute>
+      } />
+      <Route exact path="/register" element={
+        <PublicRoute>
+          <Registration />
+        </PublicRoute>
+      } />
+      {/* <Route
+          path="/private"
+          element={
+            <PrivateRoute>
+              <PrivatePage />
+            </PrivateRoute>
+          }
+        /> */}
+    </Routes>
   );
 }
 

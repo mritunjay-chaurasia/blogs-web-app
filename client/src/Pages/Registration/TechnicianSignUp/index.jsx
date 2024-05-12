@@ -20,7 +20,9 @@ import Select from "../../../components/Select";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
-const TechnicianSignUp = () => {
+import * as AuthApi from '../../../api/auth.api';
+
+const TechnicianSignUp = ({ type }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [userDetails, setUserDetails] = useState({
@@ -35,43 +37,15 @@ const TechnicianSignUp = () => {
     emailErrMess: "",
     passwordErrMess: "",
     phoneNoErrMess: "",
-    genderErrMess: ""
+    genderErrMess: "",
+    isEmailExist:false,
   })
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-  const registerBtn = () => {
-    if (userDetails.fName === "" && userDetails.lName === "" && userDetails.password === "" && userDetails.email === "" && userDetails.phoneNo < 10 && userDetails.gender === "") {
-      setUserDetails({ ...userDetails, fNameErrMess: "First name is mandatory.", lNameErrMess: "Last name is mandatory.", emailErrMess: "Email is mandatory.", passwordErrMess: "Password is mandatory.", phoneNoErrMess: "Phone is mandatory.", genderErrMess: "Gender is mandatory." })
-      return
-    } else if (userDetails.fName === "") {
-      setUserDetails({ ...userDetails, fNameErrMess: "First name is mandatory." })
-      return
-    } else if (userDetails.lName === "") {
-      setUserDetails({ ...userDetails, lNameErrMess: "Last name is mandatory." })
-      return
-    } else if (userDetails.email === "") {
-      setUserDetails({ ...userDetails, emailErrMess: "Email is mandatory." })
-      return
-    } else if (userDetails.password === "") {
-      setUserDetails({ ...userDetails, passwordErrMess: "Password is mandatory." })
-      return
-    } else if (userDetails.phoneNo.length < 1) {
-      setUserDetails({ ...userDetails, phoneNoErrMess: "Phone Number is mandatory." })
-      return
-    } else if (userDetails.phoneNo.length < 12) {
-      setUserDetails({ ...userDetails, phoneNoErrMess: "Phone number must be 10 digit" })
-    } else if (userDetails.gender === "") {
-      setUserDetails({ ...userDetails, genderErrMess: "Gender is mandatory." })
-      return
-    } else {
-      setUserDetails({ ...userDetails, fNameErrMess: true, lNameErrMess: true, emailErrMess: true, phoneNoErrMess: true, genderErrMess: true })
-    }
-    console.log("post>>>>>>>>>>>>>>>>>>", userDetails)
-    // here u can call api
-  }
+
   const validateEmail = (email) => {
     return String(email)
       .toLowerCase()
@@ -80,8 +54,17 @@ const TechnicianSignUp = () => {
       );
   };
 
+  const checkExistEmail = async (email) => {
+    if (email) {
+      const res = await AuthApi.findExistUser({ email })
+      if (res && res.success) {
+        setUserDetails({ ...userDetails, emailErrMess: "Already Email exist" })
+        return true
+      }
+    }
+  }
 
-  const handleChange = (e) => {
+  const handleChange = async(e) => {
     const { name, value } = e.target;
     const regex = /^[a-zA-Z]+$/
     setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: true })
@@ -93,7 +76,6 @@ const TechnicianSignUp = () => {
       }
     } else if (name === "email") {
       const emailValid = validateEmail(value)
-
       if (emailValid) {
         setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: true })
       } else {
@@ -120,6 +102,62 @@ const TechnicianSignUp = () => {
     }
   }
 
+  const registerBtn = async () => {
+    if (userDetails.fName === "" && userDetails.lName === "" && userDetails.password === "" && userDetails.email === "" && userDetails.phoneNo < 10 && userDetails.gender === "") {
+      setUserDetails({ ...userDetails, fNameErrMess: "First name is mandatory.", lNameErrMess: "Last name is mandatory.", emailErrMess: "Email is mandatory.", passwordErrMess: "Password is mandatory.", phoneNoErrMess: "Phone is mandatory.", genderErrMess: "Gender is mandatory." })
+      return
+    } else if (userDetails.fName === "") {
+      setUserDetails({ ...userDetails, fNameErrMess: "First name is mandatory." })
+      return
+    } else if (userDetails.lName === "") {
+      setUserDetails({ ...userDetails, lNameErrMess: "Last name is mandatory." })
+      return
+    } else if (userDetails.email === "") {
+      setUserDetails({ ...userDetails, emailErrMess: "Email is mandatory." })
+      return
+    } else if (userDetails.password === "") {
+      setUserDetails({ ...userDetails, passwordErrMess: "Password is mandatory." })
+      return
+    } else if (userDetails.phoneNo.length < 1) {
+      setUserDetails({ ...userDetails, phoneNoErrMess: "Phone Number is mandatory." })
+      return
+    } else if (userDetails.phoneNo.length < 12) {
+      setUserDetails({ ...userDetails, phoneNoErrMess: "Phone number must be 10 digit" })
+    } else if (userDetails.gender === "") {
+      setUserDetails({ ...userDetails, genderErrMess: "Gender is mandatory." })
+      return
+    } else {
+      setUserDetails({ ...userDetails, fNameErrMess: true, lNameErrMess: true, emailErrMess: true, phoneNoErrMess: true, genderErrMess: true })
+    }
+
+    const { fName, lName, email, password, phoneNo, gender } = userDetails
+    const temp = {
+      fName,
+      lName,
+      email,
+      password,
+      phoneNo,
+      gender,
+    };
+    const response = await AuthApi.register(temp);
+    if (response && response.success) {
+      localStorage.setItem("access_token",response.token)
+      setUserDetails({
+        fName: "",
+        lName: "",
+        email: "",
+        password: "",
+        phoneNo: "",
+        gender: "",
+        fNameErrMess: "",
+        lNameErrMess: "",
+        emailErrMess: "",
+        passwordErrMess: "",
+        phoneNoErrMess: "",
+        genderErrMess: ""
+      });
+    }
+  }
 
   return (
     <Container>
@@ -197,6 +235,7 @@ const TechnicianSignUp = () => {
                         value={userDetails.email}
                         name="email"
                         onChange={(e) => handleChange(e)}
+                        onBlur={(e) => checkExistEmail(e.target.value)}
                       />
                       <label className="err-message">{userDetails.emailErrMess}</label>
                     </Form.Group>

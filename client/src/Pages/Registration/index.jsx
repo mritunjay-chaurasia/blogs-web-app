@@ -10,9 +10,9 @@ const Registration = () => {
   return (
     <>
       {dataFromLogdin === "technician" ? (
-        <TechnicianSignUp />
+        <TechnicianSignUp type={dataFromLogdin} />
       ) : (
-        <CustomerSignUp />
+        <CustomerSignUp type={dataFromLogdin}/>
       )}
     </>
   );
