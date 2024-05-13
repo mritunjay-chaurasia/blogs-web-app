@@ -54,7 +54,7 @@ module.exports.register = async (req, res) => {
     }
 
     const hashPassword = hashAndSaltPassword(password)
-    const userToken = generateUserToken(user.id)
+  
     const userDocument = new UserModel({
         firstName: fName,
         lastName: lName,
@@ -67,6 +67,7 @@ module.exports.register = async (req, res) => {
     try {
         const userSaved = await userDocument.save()
         console.log("userSaved>>>>>>>>>>>>>", userSaved)
+        const userToken = generateUserToken(userSaved._id)
         return res.status(201).send({ success: true, userSaved: userSaved, message: "Registered Successfully!", token: userToken })
     }
     catch (err) {
@@ -88,9 +89,9 @@ module.exports.login = async (req, res) => {
             return res.status(404).send({ success: false, message: "User not found." })
         }
         const isMatchPassword = bcrypt.compareSync(password, user.password);
-        const userToken = generateUserToken(user.id)
-        console.log('User Token:>>>', userToken);
         if (isMatchPassword) {
+            const userToken = generateUserToken(user.id)
+            console.log('User Token:>>>', userToken);
             return res.status(200).send({ success: true, message: "Logged in Successfully", token: userToken })
         } else {
             return res.status(404).send({ success: false, message: "Wrong Password" })
