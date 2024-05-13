@@ -7,14 +7,17 @@ import { useNavigate } from "react-router-dom";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
-import  * as AuthApi  from '../../api/auth.api';
-
+import * as AuthApi from '../../api/auth.api';
+import NotificationIcons from '../../components/Notification'
 const LoginPage = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [radioValue, setRadioValue] = useState("customer");
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
+  const [isLoader, setIsLoader] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [showNotification, setShowNotification] = useState(false)
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
@@ -22,7 +25,8 @@ const LoginPage = () => {
     passwordErrMess: "",
   });
 
-  const handleLogin = async() => {
+  const handleLogin = async () => {
+    setIsLoader(true)
     if (userDetails.email === "" && userDetails.password === "") {
       setUserDetails({ ...userDetails, emailErrMess: "Please input your E-mail.", passwordErrMess: "Please input your Password!" });
       return
@@ -35,16 +39,18 @@ const LoginPage = () => {
     } else {
       setUserDetails({ ...userDetails, emailErrMess: true, passwordErrMess: true });
     }
-    // console.log("submit data>>>>>>>>>>>>", userDetails)
     const data = {
-      email:userDetails.email,
-      password:userDetails.password
+      email: userDetails.email,
+      password: userDetails.password
     }
     const response = await AuthApi.login(data)
-    if(response && response.success){
-       localStorage.setItem("access_token",response.token)
+    if (response && response.success) {
+      localStorage.setItem("access_token", response.token)
+      navigate("/dashboard"); 
     }
-
+    setNotificationMessage(response.message)
+    setShowNotification(true)
+    setIsLoader(false)
   };
 
   const handleChange = (e) => {
@@ -70,6 +76,8 @@ const LoginPage = () => {
   };
   return (
     <>
+      <NotificationIcons showNotification={showNotification} setShowNotification={setShowNotification} notificationMessage={notificationMessage} />
+      
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header>
           <p>Pick Registration Type</p>
@@ -162,10 +170,10 @@ const LoginPage = () => {
                 height={"60px"}
                 borderRadius={"12px"}
                 fontWeight={"700"}
-                loader={false}
+                loader={isLoader}
                 background={"rgb(1, 212, 213)"}
                 btnName={"Log In"}
-                disabled={false}
+                disabled={isLoader}
                 onClick={handleLogin}
               />
               <BasicButtons

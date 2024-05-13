@@ -4,12 +4,14 @@ import LoginPage from "./Pages/Login";
 import Registration from "./Pages/Registration";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
-      <Route path="/login" element={
+      <Route exact path="/login" element={
         <PublicRoute>
           <LoginPage />
         </PublicRoute>
@@ -19,14 +21,15 @@ function App() {
           <Registration />
         </PublicRoute>
       } />
-      {/* <Route
-          path="/private"
-          element={
-            <PrivateRoute>
-              <PrivatePage />
-            </PrivateRoute>
-          }
-        /> */}
+
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 }

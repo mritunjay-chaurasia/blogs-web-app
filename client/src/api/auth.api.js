@@ -9,7 +9,7 @@ export const findExistUser = async (data) => {
         return Promise.reject();
     } catch (error) {
         if (error.response && error.response.status) {
-            return { success: true, message: error.response.data.message };
+            return { success: false, message: error.response.data.message };
         } else {
             return { success: false, message: "Something went wrong. Please try again later." };
         }
@@ -29,7 +29,7 @@ export const register = async (data) => {
     catch (error) {
         console.error("Error during register", error);
         if (error.response && error.response.status) {
-            return { success: true, message: error.response.data.message };
+            return { success: false, message: error.response.data.message };
         } else {
             return { success: false, message: "Something went wrong. Please try again later." };
         }
@@ -47,7 +47,7 @@ export async function login(data) {
     catch (error) {
         console.log("Error during login", error.response.data.message)
         if (error.response && error.response.status) {
-            return { success: true, message: error.response.data.message };
+            return { success: false, message: error.response.data.message };
         } else {
             return { success: false, message: "Something went wrong. Please try again later." };
         }

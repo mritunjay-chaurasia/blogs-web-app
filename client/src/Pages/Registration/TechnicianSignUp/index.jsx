@@ -3,10 +3,11 @@ import "./style.css";
 import BasicButtons from "../../../components/Button";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { Regx } from "../../../constants";
 import PasswordValidation from "../../../components/PasswordValidation/PasswordValidation";
 import PasswordModal from '../../../components/PasswordModal/PasswordModal'
+import NotificationIcons from '../../../components/Notification'
 import {
   Form,
   Container,
@@ -25,6 +26,9 @@ import * as AuthApi from '../../../api/auth.api';
 const TechnicianSignUp = ({ type }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoader, setIsLoader] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [showNotification, setShowNotification] = useState(false)
   const [userDetails, setUserDetails] = useState({
     fName: "",
     lName: "",
@@ -57,7 +61,9 @@ const TechnicianSignUp = ({ type }) => {
   const checkExistEmail = async (email) => {
     if (email) {
       const res = await AuthApi.findExistUser({ email })
-      if (res && res.success) {
+      if (res && !res.success) {
+        setNotificationMessage(res.message)
+        setShowNotification(true)
         setUserDetails({ ...userDetails, emailErrMess: "Already Email exist" })
         return true
       }
@@ -103,7 +109,9 @@ const TechnicianSignUp = ({ type }) => {
   }
 
   const registerBtn = async () => {
+    setIsLoader(true)
     if (userDetails.fName === "" && userDetails.lName === "" && userDetails.password === "" && userDetails.email === "" && userDetails.phoneNo < 10 && userDetails.gender === "") {
+      setIsLoader(false)
       setUserDetails({ ...userDetails, fNameErrMess: "First name is mandatory.", lNameErrMess: "Last name is mandatory.", emailErrMess: "Email is mandatory.", passwordErrMess: "Password is mandatory.", phoneNoErrMess: "Phone is mandatory.", genderErrMess: "Gender is mandatory." })
       return
     } else if (userDetails.fName === "") {
@@ -142,6 +150,7 @@ const TechnicianSignUp = ({ type }) => {
     const response = await AuthApi.register(temp);
     if (response && response.success) {
       localStorage.setItem("access_token",response.token)
+      navigate("/dashboard");  
       setUserDetails({
         fName: "",
         lName: "",
@@ -157,10 +166,14 @@ const TechnicianSignUp = ({ type }) => {
         genderErrMess: ""
       });
     }
+    setNotificationMessage(response.message)
+    setShowNotification(true)
+    setIsLoader(false)
   }
 
   return (
     <Container>
+       <NotificationIcons showNotification={showNotification} setShowNotification={setShowNotification} notificationMessage={notificationMessage} />
       <Row className="my-3 h-100 w-100">
         <Col xs={2} md={2} lg={2}></Col>
         <Col xs={8} md={8} lg={8} className="body-container">
@@ -340,10 +353,10 @@ const TechnicianSignUp = ({ type }) => {
                         height={"60px"}
                         borderRadius={"12px"}
                         fontWeight={"700"}
-                        loader={false}
+                        loader={isLoader}
                         background={"rgb(1, 212, 213)"}
                         btnName={"Create Account"}
-                        disabled={false}
+                        disabled={isLoader}
                         onClick={registerBtn}
                       />
                     </Col>

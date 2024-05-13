@@ -7,6 +7,6 @@ const PublicRoute = ({ children }) => {
     const location = useLocation();
     const toPath = `/login${location.search}`
 
-    return localStorage.getItem(ACCESS_TOKEN) ? children : <Navigate to={toPath} state={{ from: window.location }} />;
+    return localStorage.getItem(ACCESS_TOKEN) ? children : <Navigate to={toPath} state={{ from: location.pathname }} />;
 }
 export default PublicRoute;

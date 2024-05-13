@@ -2,35 +2,30 @@ import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-export const NotificationIcons = (message, isopne) => {
-  const [open, setOpen] = React.useState(false);
-  React.useEffect(() => {
-    if (isopne) {
-      setOpen(isopne)
-    }
-  }, [message])
-
-
+const NotificationIcons = ({ showNotification, notificationMessage, setShowNotification }) => {
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
 
-    setOpen(false);
+    setShowNotification(false);
   };
-
+  const vertical = 'top';
+  const horizontal = "right"
   return (
     <div>
-      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+      <Snackbar open={showNotification}  anchorOrigin={{ vertical, horizontal }} autoHideDuration={4000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
           severity="success"
           variant="filled"
           sx={{ width: '100%' }}
         >
-          {message}
+          {notificationMessage}
         </Alert>
       </Snackbar>
     </div>
   );
 }
+
+export default NotificationIcons;
