@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import logo from "../../assets/Images/geeker_logo.png";
-import BasicButtons from "../../components/Button";
-import { Divider, Link } from "@mui/material";
-import { Modal, ToggleButton, ButtonGroup } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import BasicButtons from "../../components/Button/Button";
+import { Divider} from "@mui/material";
+import {Link, useNavigate } from "react-router-dom";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
@@ -11,8 +9,6 @@ import * as AuthApi from '../../api/auth.api';
 import NotificationIcons from '../../components/Notification'
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [show, setShow] = useState(false);
-  const [radioValue, setRadioValue] = useState("customer");
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
   const [isLoader, setIsLoader] = useState(false);
@@ -29,16 +25,21 @@ const LoginPage = () => {
     setIsLoader(true)
     if (userDetails.email === "" && userDetails.password === "") {
       setUserDetails({ ...userDetails, emailErrMess: "Please input your E-mail.", passwordErrMess: "Please input your Password!" });
+      setIsLoader(false)
       return
     } else if (userDetails.email === "") {
       setUserDetails({ ...userDetails, emailErrMess: "Please input your E-mail." });
+      setIsLoader(false)
       return
     } else if (userDetails.password === "") {
       setUserDetails({ ...userDetails, passwordErrMess: "Please input your Password!" });
+      setIsLoader(false)
       return
     } else {
       setUserDetails({ ...userDetails, emailErrMess: true, passwordErrMess: true });
     }
+
+
     const data = {
       email: userDetails.email,
       password: userDetails.password
@@ -46,7 +47,7 @@ const LoginPage = () => {
     const response = await AuthApi.login(data)
     if (response && response.success) {
       localStorage.setItem("access_token", response.token)
-      navigate("/dashboard"); 
+      navigate("/dashboard");
     }
     setNotificationMessage(response.message)
     setShowNotification(true)
@@ -58,13 +59,8 @@ const LoginPage = () => {
     setUserDetails({ ...userDetails, [name]: value, [`${name}ErrMess`]: true })
   }
 
-  const register = () => {
-    navigate("/register", { state: { data: radioValue } });
-  };
-  const radios = [
-    { name: "Customer", value: "customer" },
-    { name: "Technician", value: "technician" },
-  ];
+
+
   const handleToggle = () => {
     if (type === "password") {
       setIcon(eye);
@@ -77,60 +73,8 @@ const LoginPage = () => {
   return (
     <>
       <NotificationIcons showNotification={showNotification} setShowNotification={setShowNotification} notificationMessage={notificationMessage} />
-      
-      <Modal show={show} onHide={() => setShow(false)}>
-        <Modal.Header>
-          <p>Pick Registration Type</p>
-        </Modal.Header>
-        <Modal.Body className="text-center">
-          <ButtonGroup>
-            {radios.map((radio, idx) => (
-              <ToggleButton
-                className="px-5 py-3"
-                key={idx}
-                id={`radio-${idx}`}
-                type="radio"
-                // variant="outline-info"
-                variant={idx % 2 ? "outline-info" : "outline-info"}
-                name="radio"
-                value={radio.value}
-                checked={radioValue === radio.value}
-                onChange={(e) => setRadioValue(e.currentTarget.value)}
-              >
-                {radio.name}
-              </ToggleButton>
-            ))}
-          </ButtonGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <BasicButtons
-            onClick={() => setShow(false)}
-            type={"button"}
-            width={"85px"}
-            color={"white"}
-            height={"30px"}
-            fontWeight={"600"}
-            loader={false}
-            background={"#97abb6"}
-            btnName={"Close"}
-            disabled={false}
-          />
-          <BasicButtons
-            onClick={register}
-            type={"button"}
-            width={"85px"}
-            color={"white"}
-            height={"30px"}
-            fontWeight={"600"}
-            loader={false}
-            background={"rgb(1, 212, 213)"}
-            btnName={"Start"}
-            disabled={false}
-          />
-        </Modal.Footer>
-      </Modal>
       <div className="login-div-form my-4">
-        <img src={logo} />
+        <h1>Logo</h1>
         <Divider className="my-4">
           <h5>Login</h5>
         </Divider>
@@ -171,7 +115,7 @@ const LoginPage = () => {
                 borderRadius={"12px"}
                 fontWeight={"700"}
                 loader={isLoader}
-                background={"rgb(1, 212, 213)"}
+                background={"rgb(135 135 135)"}
                 btnName={"Log In"}
                 disabled={isLoader}
                 onClick={handleLogin}
@@ -182,7 +126,7 @@ const LoginPage = () => {
                 height={"60px"}
                 borderRadius={"12px"}
                 loader={false}
-                borderColor={"rgb(1, 212, 213)"}
+                borderColor={"rgb(135 135 135)"}
                 fontWeight={"700"}
                 variant={"outlined"}
                 btnName={"Continue with Google"}
@@ -193,12 +137,10 @@ const LoginPage = () => {
         </div>
         <div className="d-flex flex-wrap flex-row justify-content-center align-items-center gap-2 py-3">
           <span>Need an Account?</span>
-          <Link onClick={() => setShow(true)} style={{ cursor: "pointer" }}>
-            Register here
-          </Link>
+          <Link to={"/register"} style={{ cursor: "pointer" }}> Register here</Link>
         </div>
         <Link
-          to="/register"
+          to="/forget-password"
           state={{ some: "value" }}
           style={{ cursor: "pointer" }}
         >
